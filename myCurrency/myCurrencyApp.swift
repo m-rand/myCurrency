@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct myCurrencyApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  @StateObject private var dataModel = DataModel()
+  var body: some Scene {
+    WindowGroup {
+      MainView()
+        .environmentObject(dataModel)
     }
+  }
 }
