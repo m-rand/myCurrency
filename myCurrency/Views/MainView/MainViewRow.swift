@@ -10,36 +10,47 @@ import SwiftUI
 struct MainViewRow: View {
   
   @Binding var currency: Currency
-  let formatter = NumberFormatter()
+  var rate: Double
+  var isBase: Bool
   
   var body: some View {
-    HStack {
-      Text(currency.code)
-      Text(currency.name)
+    HStack(alignment: .center, spacing: 0) {
+      FlagView(code: currency.code)
+        .frame(width: 48, height: 32)
+      VStack(alignment: .leading, spacing: 4) {
+        Text(currency.name)
+          .font(.headline)
+          .truncationMode(.tail)
+          .lineLimit(1)
+          .foregroundColor(.primary)
+        
+        HStack(alignment: .center, spacing: 8) {
+          Text(currency.code)
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+        }
+      }
+      .padding(.leading)
       Spacer()
-      Text(formatValue(value: currency.value))
+      Text(formatValue(for: rate))
+        .font(.system(.headline, design: .monospaced))
     }
-    .background(currency.isBase ? Color(UIColor.systemBackground) : Color(UIColor.secondarySystemBackground))
-    .onTapGesture(perform: {
-      currency.isBase = true
-      print("tap")
-    })
   }
   
-  private func formatValue(value: Double) -> String {
-    guard (value.isNaN) else {
-      return "--"
-    }
+  private func formatValue(for value: Double) -> String {
+    if value.isZero { return "--" }
+    let formatter = NumberFormatter()
     formatter.numberStyle = NumberFormatter.Style.decimal
+    formatter.minimumIntegerDigits = 2
+    formatter.minimumFractionDigits = 2
     formatter.maximumFractionDigits = 2
-    formatter.maximumIntegerDigits = 2
-    return formatter.string(for: value) ?? "--"
+    return formatter.string(for: value)!
   }
 }
 
 struct MainViewRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
     static var previews: some View {
-      MainViewRow(currency: .constant(czk))
+      MainViewRow(currency: .constant(czk), rate: Double(1.0), isBase: true)
     }
 }

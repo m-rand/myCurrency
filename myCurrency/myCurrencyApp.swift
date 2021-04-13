@@ -9,11 +9,15 @@ import SwiftUI
 
 @main
 struct myCurrencyApp: App {
-  @StateObject private var dataModel = DataModel()
+  @StateObject private var state = AppState()
   var body: some Scene {
     WindowGroup {
-      MainView()
-        .environmentObject(dataModel)
+      MainView(state: state) {
+        state.save()
+      }
+      .onAppear {
+        state.load()
+      }
     }
   }
 }

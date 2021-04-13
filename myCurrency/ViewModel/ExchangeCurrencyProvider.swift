@@ -10,33 +10,20 @@ import Combine
 import SwiftUI
 
 class ExchangeCurrencyProvider: ObservableObject {
-  private var dataModel: DataModel
-  private var currenciesToken: AnyCancellable?
+  private var state: AppState?
+  private var baseToken: AnyCancellable?
   private var exchangeToken: AnyCancellable?
   @Published var exchangeRates = CurrencyExchange(base: "", rates: [:])
   
-  init(dataModel: DataModel) {
-    self.dataModel = dataModel
-    
-    /// Subscribe to changes on dataModel.myCurrencies and filter them down to fetching new data
-    currenciesToken = dataModel.$allCurrencies
-      /// we want to proceed only if:
-      /// - new currency was selected
-      /// - user selected another currency as a base
-      //.filter { _ in dataModel.base != nil }
-      .filter { $0.contains { $0.isBase == true } } /// ensure baseCurrency is set, otherwise we don't care
-      .scan([], { old, new -> [Currency] in
-        let oldSelected = old.filter { $0.isSelected || $0.isBase }
-        let newSelected = new.filter { $0.isSelected || $0.isBase }
-        return Set(newSelected).isSubset(of: Set(oldSelected)) ? oldSelected : newSelected
-      })
+  func setup(state: AppState) {
+    self.state = state
+    baseToken = state.$base
       .removeDuplicates()
-      .filter { !$0.isEmpty } // don't proceed if empty
+      .filter{ $0 != nil }
       .sink(receiveCompletion: { _ in },
-        receiveValue: { currencies in
-          let baseCode = currencies.first { $0.isBase == true }!.code
-          self.fetchExchangeCurrency(for: baseCode, others: currencies.map { $0.code })
-      })
+            receiveValue: { base in
+              self.fetchExchangeCurrency(for: base!, others: [])
+            })
   }
 }
 
@@ -49,8 +36,7 @@ extension ExchangeCurrencyProvider {
       })
       .sink(
         receiveCompletion: { _ in },
-        receiveValue: {
-          print($0)
+        receiveValue: { [self] in
           self.exchangeRates = $0
       })
   }

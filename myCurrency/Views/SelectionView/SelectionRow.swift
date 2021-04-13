@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SelectionRow: View {
   
-  @EnvironmentObject var dataModel: DataModel
+  @ObservedObject var state: AppState
   @Binding var currency: Currency
   
   var body: some View {
@@ -44,6 +44,6 @@ struct SelectionRow: View {
 struct SelectionRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
   static var previews: some View {
-    SelectionRow(currency: .constant(czk))
+    SelectionRow(state: AppState(), currency: .constant(czk))
   }
 }
