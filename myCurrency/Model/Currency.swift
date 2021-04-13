@@ -16,8 +16,6 @@ struct Currency: Identifiable, Codable, Equatable {
   var symbol: String
   var value: Double = Double.zero
   var isSelected: Bool = false
-  //var isBase: Bool = false
-  
   
   enum CodingKeys: String, CodingKey {
     case code, name, symbol
