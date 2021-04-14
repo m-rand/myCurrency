@@ -10,7 +10,14 @@ import Foundation
 class AppState: ObservableObject {
   
   private let currencyStorage = CurrencyStorage()
-  @Published var allCurrencies = [Currency]()
+  @Published var allCurrencies = [Currency]() {
+    willSet {
+      let filtered = newValue.filter{ $0.isSelected }
+      if filtered.isEmpty || !filtered.contains(where: { $0.code == base }) {
+        base = ""
+      }
+    }
+  }
   @Published var base: String? // contains code of currency selected as a base
 
 }

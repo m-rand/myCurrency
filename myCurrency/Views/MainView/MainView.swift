@@ -24,7 +24,7 @@ struct MainView: View {
         ForEach(myCurrencies) { currency in
           MainViewRow(
             currency: binding(for: currency),
-            rate: exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero)
+            rate: (state.base ?? "").isEmpty ? Double.zero : exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero)
             .onTapGesture(perform: {
               withAnimation(.linear) {
                 state.base = currency.code
@@ -65,7 +65,19 @@ struct MainView: View {
 }
 
 struct MainView_Previews: PreviewProvider {
+  static var state = AppState()
   static var previews: some View {
-    MainView(state: AppState(), saveAction: {})
+    MainView(state: state, saveAction: {})
+      .onAppear {
+        state.load()
+        state.allCurrencies = state.allCurrencies.map {
+          var currency = $0
+          if $0.code == "EUR" || $0.code == "USD" || $0.code == "CZK" {
+            currency.isSelected = true
+          }
+          return currency
+        }
+        state.base = "EUR"
+      }
   }
 }
