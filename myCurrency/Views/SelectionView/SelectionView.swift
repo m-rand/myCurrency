@@ -17,7 +17,7 @@ struct SelectionView: View {
     state.allCurrencies.filter {
       (!showSelectedOnly || $0.isSelected) &&
       currencyToSearch.isEmpty
-        ? true : $0.name.contains(currencyToSearch)
+        ? true : $0.name.lowercased().contains(currencyToSearch.lowercased())
     }
   }
   

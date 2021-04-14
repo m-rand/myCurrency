@@ -24,15 +24,13 @@ struct MainView: View {
         ForEach(myCurrencies) { currency in
           MainViewRow(
             currency: binding(for: currency),
-            rate: exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero,
-            isBase: state.base == currency.code)
+            rate: exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero)
             .onTapGesture(perform: {
               withAnimation(.linear) {
                 state.base = currency.code
               }
             })
-            .foregroundColor(state.base == currency.code ? Color.accentColor : Color.primary)
-            .listRowBackground(state.base == currency.code ? Color("accentBackground") : Color(UIColor.systemBackground))
+            .listRowBackground(state.base == currency.code ? Color("accentBackground") : Color(UIColor.secondarySystemGroupedBackground))
         }
       }
       .listStyle(InsetGroupedListStyle())
@@ -67,7 +65,7 @@ struct MainView: View {
 }
 
 struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-      MainView(state: AppState(), saveAction: {})
-    }
+  static var previews: some View {
+    MainView(state: AppState(), saveAction: {})
+  }
 }

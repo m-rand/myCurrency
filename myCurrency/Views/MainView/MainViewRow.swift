@@ -11,20 +11,19 @@ struct MainViewRow: View {
   
   @Binding var currency: Currency
   var rate: Double
-  var isBase: Bool
   
   var body: some View {
-    HStack(alignment: .center, spacing: 0) {
+    HStack(alignment: .center) {
       FlagView(code: currency.code)
         .frame(width: 48, height: 32)
-      VStack(alignment: .leading, spacing: 4) {
+      VStack(alignment: .leading) {
         Text(currency.name)
           .font(.headline)
           .truncationMode(.tail)
           .lineLimit(1)
           .foregroundColor(.primary)
         
-        HStack(alignment: .center, spacing: 8) {
+        HStack(alignment: .center) {
           Text(currency.code)
             .font(.subheadline)
             .foregroundColor(.secondary)
@@ -44,6 +43,7 @@ struct MainViewRow: View {
     formatter.minimumIntegerDigits = 2
     formatter.minimumFractionDigits = 2
     formatter.maximumFractionDigits = 2
+    formatter.roundingMode = .halfUp
     return formatter.string(for: value)!
   }
 }
@@ -51,6 +51,6 @@ struct MainViewRow: View {
 struct MainViewRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
     static var previews: some View {
-      MainViewRow(currency: .constant(czk), rate: Double(1.0), isBase: true)
+      MainViewRow(currency: .constant(czk), rate: Double(1.0))
     }
 }
