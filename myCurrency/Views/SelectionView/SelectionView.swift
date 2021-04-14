@@ -32,6 +32,7 @@ struct SelectionView: View {
           SelectionRow(state: state, currency: binding(for: currency))
         }
       }
+      .animation(.spring())
     }
     .listStyle(InsetListStyle())
     .navigationBarTitle("All currencies")

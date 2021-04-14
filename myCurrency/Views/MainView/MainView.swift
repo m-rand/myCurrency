@@ -33,15 +33,17 @@ struct MainView: View {
             .listRowBackground(state.base == currency.code ? Color("accentBackground") : Color(UIColor.secondarySystemGroupedBackground))
         }
       }
+      .animation(.spring())
       .listStyle(InsetGroupedListStyle())
       .navigationTitle("My Currencies")
       .navigationBarTitleDisplayMode(.large)
-      .navigationBarItems(trailing: Button(action: {
-        showingSelection = true
-      }) {
-        Image(systemName: "plus.circle")
-          .font(.title)
-      })
+      .navigationBarItems(trailing:
+        Button(action: {
+          showingSelection = true
+        }) {
+          Image(systemName: "plus.circle")
+            .font(.title)
+        })
       .fullScreenCover(isPresented: $showingSelection) {
         NavigationView {
           SelectionView(state: state, showing: $showingSelection)
