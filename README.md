@@ -9,3 +9,5 @@ A simple app for managing currencies and their conversion rates.
 - Flags for all countries are loaded from https://github.com/transferwise/currency-flags.
 
 Project extensively uses Combine framework both for networking and for in-app state changes observing. 
+
+**Note:** Currently no errors reporting to user. Will be included in future releases.  
