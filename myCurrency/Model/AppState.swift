@@ -50,22 +50,24 @@ extension AppState {
 
     guard let file = Bundle.main.url(forResource: filename, withExtension: nil)
     else {
-      fatalError("Couldn't find \(filename) in main bundle.")
+      print("Couldn't find \(filename) in main bundle.")
+      return [] as! T
     }
 
     do {
       data = try Data(contentsOf: file)
     } catch {
-      fatalError("Couldn't load \(filename) from main bundle:\n\(error)")
+      print("Couldn't load \(filename) from main bundle:\n\(error)")
+      return [] as! T
     }
 
     do {
       let decoder = JSONDecoder()
       return try decoder.decode(T.self, from: data)
     } catch {
-      fatalError("Couldn't parse \(filename) as \(T.self):\n\(error)")
+      print("Couldn't parse \(filename) as \(T.self):\n\(error)")
+      return [] as! T
     }
   }
 }
-
 

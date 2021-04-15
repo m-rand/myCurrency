@@ -13,6 +13,9 @@ struct MainView: View {
   @ObservedObject var state: AppState
   @StateObject private var exchangeProvider = ExchangeCurrencyProvider()
   @State private var showingSelection = false
+  @State private var showingAlert: Bool = false
+  @State private var alertTitle: String = ""
+  @State private var alertMessage: String = ""
   var myCurrencies: [Currency] {
     state.allCurrencies.filter { $0.isSelected }.sorted { $0.code == state.base && $1.code != state.base }
   }
@@ -44,6 +47,9 @@ struct MainView: View {
           Image(systemName: "plus.circle")
             .font(.title)
         })
+      .alert(isPresented: $showingAlert, content: {
+        Alert(title: Text("App bundle error"), message: Text("Please reinstall the application."), dismissButton: .default(Text("OK")))
+      })
       .fullScreenCover(isPresented: $showingSelection) {
         NavigationView {
           SelectionView(state: state, showing: $showingSelection)
@@ -51,7 +57,13 @@ struct MainView: View {
       }
     }
     .onAppear(perform: {
+      state.load()
       exchangeProvider.setup(state: state)
+      if state.allCurrencies.isEmpty {
+        showingAlert = true
+        alertTitle = "App Bundle Error"
+        alertMessage = "Please reinstall the application."
+      }
     })
     .onChange(of: scenePhase, perform: { phase in
       if phase == .inactive { saveAction() }

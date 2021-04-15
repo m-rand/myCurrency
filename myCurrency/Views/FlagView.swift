@@ -20,7 +20,7 @@ struct FlagView: View {
       } else if model.isLoading {
         ProgressView()
       } else {
-        Image(systemName: "photo")
+        Image(systemName: "") // intentionally empty
       }
     }
     .onAppear {

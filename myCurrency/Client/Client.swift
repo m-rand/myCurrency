@@ -14,6 +14,10 @@ struct Client {
     let value: T
     let response: URLResponse
   }
+  
+  enum DataTaskError: Error {
+    case invalidResponse, rateLimitted, serverBusy
+  }
     
   func run<T: Decodable>(_ request: URLRequest) -> AnyPublisher<Response<T>, Error> {
     return URLSession.shared

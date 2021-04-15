@@ -13,7 +13,7 @@ class FlagsViewModel: ObservableObject {
   static let urlString = "https://raw.githubusercontent.com/transferwise/currency-flags/master/src/flags/"
   @Published var imageData: Data?
   @Published var isLoading = false
-
+  
   private static let cache = NSCache<NSURL, NSData>() // static for all-app cache
   private var cancellables = Set<AnyCancellable>()
   
@@ -33,12 +33,15 @@ class FlagsViewModel: ObservableObject {
       return
     }
     
-    URLSession.shared.dataTaskPublisher(for: url)
+    let request = URLRequest(url: url, timeoutInterval: 5)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map { $0.data }
-      .replaceError(with: nil) // MARK: TODO
+      .replaceError(with: nil)
       .receive(on: DispatchQueue.main)
       .sink { [weak self] in
-        print("received flag")
+        #if DEBUG
+        print("received flag for url: ", url)
+        #endif
         if let data = $0 {
           Self.cache.setObject(data as NSData, forKey: url as NSURL)
           self?.imageData = data
@@ -48,4 +51,3 @@ class FlagsViewModel: ObservableObject {
       .store(in: &cancellables)
   }
 }
-

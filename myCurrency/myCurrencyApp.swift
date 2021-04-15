@@ -16,7 +16,7 @@ struct myCurrencyApp: App {
         state.save()
       }
       .onAppear {
-        state.load()
+        //
       }
     }
   }
