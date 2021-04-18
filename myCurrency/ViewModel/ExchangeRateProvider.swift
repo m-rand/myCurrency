@@ -9,13 +9,15 @@ import Foundation
 import Combine
 import SwiftUI
 
-class ExchangeCurrencyProvider: ObservableObject {
+class ExchangeRateProvider: ObservableObject {
+  private var client: ExchangeRateClient?
   private var state: AppState?
   private var baseToken: AnyCancellable?
   private var exchangeToken: AnyCancellable?
   @Published var exchangeRates = CurrencyExchange(base: "", rates: [:])
   
-  func setup(state: AppState) {
+  func setup(state: AppState, client: ExchangeRateClient) {
+    self.client = client
     self.state = state
     baseToken = state.$base
       .removeDuplicates()
@@ -27,9 +29,10 @@ class ExchangeCurrencyProvider: ObservableObject {
   }
 }
 
-extension ExchangeCurrencyProvider {
+extension ExchangeRateProvider {
   func fetchExchangeCurrency(for code: String, others: [String]) {
-    exchangeToken = ExchangeCurrencyClient.request(path: .latestRates, base: code, others: others)
+    exchangeToken = client!.request(path: .latestRates, base: code, others: others)
+      .receive(on: RunLoop.main)
       .mapError({ (error) -> Error in // MARK: TODO
         print(error)
         return error

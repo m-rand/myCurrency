@@ -11,7 +11,7 @@ struct MainView: View {
   
   @Environment(\.scenePhase) private var scenePhase
   @ObservedObject var state: AppState
-  @ObservedObject var exchangeProvider: ExchangeCurrencyProvider
+  @ObservedObject var exchangeProvider: ExchangeRateProvider
   @State private var showingSelection = false
   @State private var showingAlert: Bool = false
   @State private var alertTitle: String = ""
@@ -66,9 +66,6 @@ struct MainView: View {
         }
       }
     }
-    .onAppear(perform: {
-      exchangeProvider.setup(state: state)
-    })
     .onChange(of: scenePhase, perform: { phase in
       if phase == .inactive { saveAction() }
     })
@@ -85,7 +82,7 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
   static var state = AppState(storage: CurrencyDocumentStorage())
   static var previews: some View {
-    MainView(state: state, exchangeProvider: ExchangeCurrencyProvider(), saveAction: {})
+    MainView(state: state, exchangeProvider: ExchangeRateProvider(), saveAction: {})
       .onAppear {
         state.load()
         state.allCurrencies = state.allCurrencies.map {

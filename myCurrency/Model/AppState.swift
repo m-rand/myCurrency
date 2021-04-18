@@ -62,7 +62,7 @@ extension AppState {
   func save() {
     let list = CurrencyStorageList(
       base: base,
-      currencies: allCurrencies.filter{$0.isSelected}.map{ CurrencyStorageItem(code: $0.code)}
+      currencies: allCurrencies.filter{$0.isSelected}.map{CurrencyStorageItem(code: $0.code)}
     )
     storage.save(value: list)
       .print()
