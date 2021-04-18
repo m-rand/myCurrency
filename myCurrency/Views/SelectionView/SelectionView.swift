@@ -16,8 +16,8 @@ struct SelectionView: View {
   var filteredCurrencies: [Currency] {
     state.allCurrencies.filter {
       (!showSelectedOnly || $0.isSelected) &&
-      currencyToSearch.isEmpty
-        ? true : $0.name.lowercased().contains(currencyToSearch.lowercased())
+      (currencyToSearch.isEmpty
+        ? true : $0.name.lowercased().contains(currencyToSearch.lowercased()))
     }
   }
   
@@ -74,7 +74,7 @@ struct SelectionView: View {
 struct SelectionView_Previews: PreviewProvider {
   static var showing = true
   static var previews: some View {
-    SelectionView(state: AppState(), showing: .constant(showing))
+    SelectionView(state: AppState(storage: CurrencyDocumentStorage()), showing: .constant(showing))
   }
 }
 

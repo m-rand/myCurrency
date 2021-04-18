@@ -11,7 +11,7 @@ struct MainView: View {
   
   @Environment(\.scenePhase) private var scenePhase
   @ObservedObject var state: AppState
-  @StateObject private var exchangeProvider = ExchangeCurrencyProvider()
+  @ObservedObject var exchangeProvider: ExchangeCurrencyProvider
   @State private var showingSelection = false
   @State private var showingAlert: Bool = false
   @State private var alertTitle: String = ""
@@ -23,47 +23,51 @@ struct MainView: View {
   
   var body: some View {
     NavigationView {
-      List {
-        ForEach(myCurrencies) { currency in
-          MainViewRow(
-            currency: binding(for: currency),
-            rate: (state.base ?? "").isEmpty ? Double.zero : exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero)
-            .onTapGesture(perform: {
-              withAnimation(.linear) {
-                state.base = currency.code
-              }
-            })
-            .listRowBackground(state.base == currency.code ? Color("accentBackground") : Color(UIColor.secondarySystemGroupedBackground))
+      ZStack {
+        List {
+          ForEach(myCurrencies) { currency in
+            MainViewRow(
+              currency: binding(for: currency),
+              rate: (state.base ?? "").isEmpty ? Double.zero : exchangeProvider.exchangeRates.rates[currency.code] ?? Double.zero)
+              .onTapGesture(perform: {
+                withAnimation(.linear) {
+                  state.base = currency.code
+                }
+              })
+              .listRowBackground(state.base == currency.code ? Color("accentBackground") : Color(UIColor.secondarySystemGroupedBackground))
+          }
         }
-      }
-      .animation(.spring())
-      .listStyle(InsetGroupedListStyle())
-      .navigationTitle("My Currencies")
-      .navigationBarTitleDisplayMode(.large)
-      .navigationBarItems(trailing:
-        Button(action: {
-          showingSelection = true
-        }) {
-          Image(systemName: "plus.circle")
-            .font(.title)
+        .animation(.spring())
+        .listStyle(InsetGroupedListStyle())
+        .navigationTitle("My Currencies")
+        .navigationBarTitleDisplayMode(.large)
+        .navigationBarItems(trailing:
+          Button(action: {
+            showingSelection = true
+          }) {
+            Image(systemName: "plus.circle")
+              .font(.title)
+          })
+        .alert(isPresented: $state.hasError, content: {
+          Alert(
+            title: Text("ERROR"),
+            message: Text(state.error?.localizedDescription ?? "Unknown error."),
+            dismissButton: .default(Text("OK"))
+          )
         })
-      .alert(isPresented: $showingAlert, content: {
-        Alert(title: Text("App bundle error"), message: Text("Please reinstall the application."), dismissButton: .default(Text("OK")))
-      })
-      .fullScreenCover(isPresented: $showingSelection) {
-        NavigationView {
-          SelectionView(state: state, showing: $showingSelection)
+        .fullScreenCover(isPresented: $showingSelection) {
+          NavigationView {
+            SelectionView(state: state, showing: $showingSelection)
+          }
+        }
+        
+        if (myCurrencies.isEmpty) {
+          EmptyView()
         }
       }
     }
     .onAppear(perform: {
-      state.load()
       exchangeProvider.setup(state: state)
-      if state.allCurrencies.isEmpty {
-        showingAlert = true
-        alertTitle = "App Bundle Error"
-        alertMessage = "Please reinstall the application."
-      }
     })
     .onChange(of: scenePhase, perform: { phase in
       if phase == .inactive { saveAction() }
@@ -79,9 +83,9 @@ struct MainView: View {
 }
 
 struct MainView_Previews: PreviewProvider {
-  static var state = AppState()
+  static var state = AppState(storage: CurrencyDocumentStorage())
   static var previews: some View {
-    MainView(state: state, saveAction: {})
+    MainView(state: state, exchangeProvider: ExchangeCurrencyProvider(), saveAction: {})
       .onAppear {
         state.load()
         state.allCurrencies = state.allCurrencies.map {

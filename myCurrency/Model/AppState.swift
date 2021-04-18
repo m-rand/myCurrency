@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 class AppState: ObservableObject {
   
-  private let currencyStorage = CurrencyStorage()
+  private var storage: AsyncStorageProvider
   @Published var allCurrencies = [Currency]() {
     willSet {
       let filtered = newValue.filter{ $0.isSelected }
@@ -19,27 +20,61 @@ class AppState: ObservableObject {
     }
   }
   @Published var base: String? // contains code of currency selected as a base
-
+  @Published var hasError = false
+  var error: Error? {
+    willSet {
+      hasError = newValue != nil
+    }
+  }
+  var cancellables = Set<AnyCancellable>()
+  
+  init(storage: AsyncStorageProvider) {
+    self.storage = storage
+  }
 }
 
 extension AppState {
-  func update(from currencies:[Currency]) -> [Currency]{
-    return allCurrencies.map {
-      var newCurrency = $0
-      newCurrency.isSelected = currencies.contains { $0.code == newCurrency.code }
-      return newCurrency
-    }
+  
+  func update(with currencies:[CurrencyStorageItem]) {
+    allCurrencies.mapInPlace({ c in
+      c.isSelected = currencies.contains(where: { $0.code == c.code })
+    })
   }
   
   func load() {
-    allCurrencies = load("currencies.json");
-    let myCurrencies = currencyStorage.load()
-    base = myCurrencies.0
-    allCurrencies = update(from: myCurrencies.1)
+    allCurrencies = load("currencies.json")
+    storage.load()
+      .print()
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { completion in
+        switch completion {
+          case .failure(let error):
+            self.error = error
+          case .finished: ()
+        }
+      }, receiveValue: { item in
+        self.update(with: item.currencies)
+        self.base = item.base
+      })
+      .store(in: &cancellables)
   }
   
   func save() {
-    currencyStorage.save(base: base, currencies: allCurrencies.filter { $0.isSelected })
+    let list = CurrencyStorageList(
+      base: base,
+      currencies: allCurrencies.filter{$0.isSelected}.map{ CurrencyStorageItem(code: $0.code)}
+    )
+    storage.save(value: list)
+      .print()
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { completion in
+        switch completion {
+          case .failure(let error):
+            self.error = error
+          case .finished: ()
+        }
+      }, receiveValue: { _ in })
+      .store(in: &cancellables)
   }
 }
 
@@ -71,3 +106,10 @@ extension AppState {
   }
 }
 
+extension Array {
+  mutating func mapInPlace(_ transform: (inout Element) -> ()) {
+    for i in indices {
+      transform(&self[i])
+    }
+  }
+}

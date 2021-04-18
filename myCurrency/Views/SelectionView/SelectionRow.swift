@@ -44,6 +44,6 @@ struct SelectionRow: View {
 struct SelectionRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
   static var previews: some View {
-    SelectionRow(state: AppState(), currency: .constant(czk))
+    SelectionRow(state: AppState(storage: CurrencyDocumentStorage()), currency: .constant(czk))
   }
 }

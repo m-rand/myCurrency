@@ -9,15 +9,18 @@ import SwiftUI
 
 @main
 struct myCurrencyApp: App {
-  @StateObject private var state = AppState()
+  @StateObject private var state = AppState(storage: CurrencyDocumentStorage())
+  @StateObject private var rates = ExchangeCurrencyProvider()
+  
   var body: some Scene {
     WindowGroup {
-      MainView(state: state) {
+      MainView(state: state, exchangeProvider: rates) {
         state.save()
       }
-      .onAppear {
-        //
-      }
+      .onAppear(perform: {
+        state.load()
+        rates.setup(state: state)
+      })
     }
   }
 }
