@@ -9,12 +9,15 @@ import SwiftUI
 
 struct SelectionRow: View {
   
-  @ObservedObject var state: AppState
+  var env: AppEnvironment
   @Binding var currency: Currency
   
   var body: some View {
     HStack(alignment: .center, spacing: 0) {
-      FlagView(code: currency.code)
+      FlagView(
+        flagImageProvider: env.model.flagImageProvider,
+        code: currency.code
+      )
         .frame(width: 48, height: 32)
       VStack(alignment: .leading, spacing: 4) {
         Text(currency.name)
@@ -27,7 +30,6 @@ struct SelectionRow: View {
           Text(currency.code)
             .font(.subheadline)
             .foregroundColor(.secondary)
-          
         }
       }
       .padding(.leading)
@@ -40,10 +42,11 @@ struct SelectionRow: View {
   
 
 }
-
+/*
 struct SelectionRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
   static var previews: some View {
     SelectionRow(state: AppState(storage: CurrencyDocumentStorage()), currency: .constant(czk))
   }
 }
+*/

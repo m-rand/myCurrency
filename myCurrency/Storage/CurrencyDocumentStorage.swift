@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class CurrencyDocumentStorage: AsyncStorageProvider, ObservableObject {
+struct CurrencyDocumentStorage: AsyncStorageProvider {
   
   private var fileName = "myCurrencies"
   private var fileExtension = "json"

@@ -9,12 +9,12 @@ import SwiftUI
 
 struct SelectionView: View {
   
-  @ObservedObject var state: AppState
+  @ObservedObject private(set) var viewModel: ViewModel
   @State var currencyToSearch: String = ""
   @State var showSelectedOnly: Bool = false
   @Binding var showing: Bool
   var filteredCurrencies: [Currency] {
-    state.allCurrencies.filter {
+    viewModel.env.state.allCurrencies.filter {
       (!showSelectedOnly || $0.isSelected) &&
       (currencyToSearch.isEmpty
         ? true : $0.name.lowercased().contains(currencyToSearch.lowercased()))
@@ -29,7 +29,10 @@ struct SelectionView: View {
       }
       List {
         ForEach(filteredCurrencies) { currency in
-          SelectionRow(state: state, currency: binding(for: currency))
+          SelectionRow(
+            env: viewModel.env,
+            currency: binding(for: currency)
+          )
         }
       }
       .animation(.spring())
@@ -64,17 +67,27 @@ struct SelectionView: View {
   }
   
   private func binding(for currency: Currency) -> Binding<Currency> {
-    guard let idx = state.allCurrencies.firstIndex(of: currency) else {
+    guard let idx = viewModel.env.state.allCurrencies.firstIndex(of: currency) else {
       fatalError()
     }
-    return $state.allCurrencies[idx]
+    return $viewModel.env.state.allCurrencies[idx]
   }
 }
-
+/*
 struct SelectionView_Previews: PreviewProvider {
   static var showing = true
   static var previews: some View {
     SelectionView(state: AppState(storage: CurrencyDocumentStorage()), showing: .constant(showing))
   }
 }
+*/
 
+extension SelectionView {
+  class ViewModel: ObservableObject {
+    var env: AppEnvironment
+    
+    init(env: AppEnvironment) {
+      self.env = env
+    }
+  }
+}

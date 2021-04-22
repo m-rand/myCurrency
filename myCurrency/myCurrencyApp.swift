@@ -9,21 +9,13 @@ import SwiftUI
 
 @main
 struct myCurrencyApp: App {
-  
-  @StateObject private var state = AppState(storage: CurrencyDocumentStorage())
-  @StateObject private var rates = ExchangeRateProvider()
-  private let client = ExchangeRateClient()
-  
+
+  private var env = AppEnvironment.build()
   var body: some Scene {
-    
     WindowGroup {
-      MainView(state: state, exchangeProvider: rates) {
-        state.save()
-      }
-      .onAppear(perform: {
-        state.load()
-        rates.setup(state: state, client: client)
-      })
+      MainView(viewModel: MainView.ViewModel(env: env), state: env.state)
+        .environment(\.injected, env)
     }
   }
+
 }
