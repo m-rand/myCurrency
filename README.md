@@ -10,4 +10,4 @@ A simple app for managing currencies and their conversion rates.
 
 Project extensively uses Combine framework both for networking and for in-app state changes observing. 
 
-**Note:** Currently no errors reporting to user. Will be included in future releases.  
+**Note:** Latest version experiments with so-called "de-protocolization" idea, as presented here: https://www.pointfree.co/blog/posts/21-how-to-control-the-world.
