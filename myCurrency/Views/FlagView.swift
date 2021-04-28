@@ -11,7 +11,6 @@ import Combine
 struct FlagView: View {
   
   @StateObject private var model = ViewModel()
-  let flagImageProvider: FlagImageProvider
   let code: String
 
   var body: some View {
@@ -23,34 +22,35 @@ struct FlagView: View {
       } else if model.isLoading {
         ProgressView()
       } else {
-        Image(systemName: "") // intentionally empty
+        Text("")
       }
     }
     .onAppear {
-      model.flagImageProvider = self.flagImageProvider
       model.loadImage(for: code)
     }
   }
 }
-/*
+
 struct FlagView_Previews: PreviewProvider {
   static var previews: some View {
     FlagView(code: "CZK")
   }
 }
-*/
+
 extension FlagView {
   class ViewModel: ObservableObject {
-    var flagImageProvider: FlagImageProvider?
+    var flagImageProvider = Env.flagImageProvider
     @Published var image: UIImage?
     @Published var isLoading = false
     private var cancellables = Set<AnyCancellable>()
     
     func loadImage(for code: String) {
-      flagImageProvider?.loadImage(for: code)
+      isLoading = true
+      flagImageProvider.loadImage(for: code)
         .receive(on: DispatchQueue.main)
         .sink(receiveValue: { item in
           self.image = UIImage(data: item)
+          self.isLoading = false
         })
         .store(in: &cancellables)
     }

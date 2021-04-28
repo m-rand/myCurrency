@@ -10,13 +10,13 @@ import Combine
 
 class CurrenciesProvider {
   private var state: AppState
-  private var storage: AsyncStorageProvider
+  private var storage: AsyncStorageProviding
   private var resource: ResourceProvider
   var cancellables = Set<AnyCancellable>()
   
   init(
     state: AppState,
-    storage: AsyncStorageProvider,
+    storage: AsyncStorageProviding,
     resource: ResourceProvider
   ) {
     self.state = state
@@ -56,7 +56,7 @@ extension CurrenciesProvider {
       base: state.base,
       currencies: state.allCurrencies.filter{$0.isSelected}.map{CurrencyStorageItem(code: $0.code)}
     )
-    storage.save(value: list)
+    storage.save(list)
       .print()
       .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { completion in

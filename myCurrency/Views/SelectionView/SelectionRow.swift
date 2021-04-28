@@ -9,13 +9,12 @@ import SwiftUI
 
 struct SelectionRow: View {
   
-  var env: AppEnvironment
+  //var env: AppEnvironment
   @Binding var currency: Currency
   
   var body: some View {
     HStack(alignment: .center, spacing: 0) {
       FlagView(
-        flagImageProvider: env.model.flagImageProvider,
         code: currency.code
       )
         .frame(width: 48, height: 32)
@@ -39,14 +38,12 @@ struct SelectionRow: View {
         .toggleStyle(SwitchToggleStyle(tint: .blue))
     }
   }
-  
-
 }
-/*
+
 struct SelectionRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
   static var previews: some View {
-    SelectionRow(state: AppState(storage: CurrencyDocumentStorage()), currency: .constant(czk))
+    SelectionRow(currency: .constant(czk))
   }
 }
-*/
+

@@ -11,30 +11,35 @@ import Combine
 
 class FlagImageProvider {
    
-  private static let cache = NSCache<NSString, NSData>()
+  private var cache: FlagImageCache
   private var client: APIClient
-  private var requestProvider: FlagImageRequestProvider
+  private var request: FlagImageRequestProviding
+  private var decoder: FlagImageDecoder
   private var cancellables = Set<AnyCancellable>()
   
   init(
     client: APIClient,
-    requestProvider: FlagImageRequestProvider
+    request: FlagImageRequestProviding,
+    decoder: FlagImageDecoder,
+    cache: FlagImageCache
   ) {
     self.client = client
-    self.requestProvider = requestProvider
+    self.request = request
+    self.decoder = decoder
+    self.cache = cache
   }
   
   func loadImage(for code: String) -> Future<Data, Never> {
     Future { promise in
-      if let data = Self.cache.object(forKey: code as NSString) {
+      if let data = self.cache.get(code) {
         promise(.success(data as Data))
       } else {
-        let request = self.requestProvider.buildRequest(for: code)
+        let request = self.request.buildRequest(code)
         self.client.execute(request)
-          .replaceError(with: Data())
-          .print()
+          .decode(type: Data.self, decoder: self.decoder)
+          .catch { err in Just(Data()) }
           .sink {
-            Self.cache.setObject($0 as NSData, forKey: code as NSString)
+            self.cache.set($0, code)
             promise(.success($0))
           }
           .store(in: &self.cancellables)

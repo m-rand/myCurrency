@@ -8,87 +8,56 @@
 import Foundation
 import SwiftUI
 
-struct StorageProviders {
-  let storageProvider: AsyncStorageProvider
-  let resourceProvider: ResourceProvider
-}
 
-struct ClientProviders {
-  let flagImageClientProvider: FlagImageClient
-  let exchangeRateClientProvider: ExchangeRateClient
-}
 
-struct RequestProviders {
-  let flagImageRequestProvider: FlagImageRequestProvider
-  let exchangeRateRequestProvider: ExchangeRateRequestProvider
-}
-
-struct ModelProvider {
+struct AppEnvironment {
+  var state: AppState
+  let storage: AsyncStorageProviding
+  let config: ResourceProvider
+  let flagImageRequest: FlagImageRequestProviding
+  let exchangeRateRequest: ExchangeRateRequestProviding
   let flagImageProvider: FlagImageProvider
   let exchangeRateProvider: ExchangeRateProvider
   let currenciesProvider: CurrenciesProvider
 }
 
-struct AppEnvironment: EnvironmentKey {
-  
-  let storage: StorageProviders
-  let clients: ClientProviders
-  let requests: RequestProviders
-  let model: ModelProvider
-  var state: AppState
-  
-  static let defaultValue = AppEnvironment.build()
-}
-
 extension AppEnvironment {
-  static func build() -> AppEnvironment {
+  
+  // MARK: release
+  public static var release: Self {
     let state = AppState()
-    let storageProviders = StorageProviders(
-      storageProvider: CurrencyDocumentStorage(),
-      resourceProvider: Resource()
-    )
-    let clientProviders = ClientProviders(
-      flagImageClientProvider: FlagImageClient(),
-      exchangeRateClientProvider: ExchangeRateClient()
-    )
-    let requestProviders = RequestProviders(
-      flagImageRequestProvider: FlagImageRequest(),
-      exchangeRateRequestProvider: ExchangeRateRequest()
-    )
-    let modelProvider = ModelProvider(
-      flagImageProvider: FlagImageProvider(
-        client: clientProviders.flagImageClientProvider,
-        requestProvider: requestProviders.flagImageRequestProvider)
-      , exchangeRateProvider: ExchangeRateProvider(
-        client: clientProviders.exchangeRateClientProvider,
-        requestProvider: requestProviders.exchangeRateRequestProvider,
-        state: state
-      ), currenciesProvider: CurrenciesProvider(
-        state: state,
-        storage: storageProviders.storageProvider,
-        resource: storageProviders.resourceProvider
-      )
-    )
-    
-    return AppEnvironment(
-      storage: storageProviders,
-      clients: clientProviders,
-      requests: requestProviders,
-      model: modelProvider,
-      state: state
+    let config = Resource()
+    return Self(
+      state: state,
+      storage: .release,
+      config: config,
+      flagImageRequest: .release,
+      exchangeRateRequest: .release,
+      flagImageProvider: FlagImageProvider(client: .release, request: .release, decoder: .release, cache: .release),
+      exchangeRateProvider: ExchangeRateProvider(client: .release, request: .release, decoder: .release, state: state),
+      currenciesProvider: CurrenciesProvider(state: state, storage: .release, resource: config)
     )
   }
+  
+  // MARK: failing
+  #if DEBUG
+  public static var failing: Self {
+    let state = AppState()
+    let config = Resource()
+    return Self(
+      state: state,
+      storage: .failing,
+      config: config,
+      flagImageRequest: .failing,
+      exchangeRateRequest: .failing,
+      flagImageProvider: FlagImageProvider(client: .failing, request: .failing, decoder: .failing, cache: .failing),
+      exchangeRateProvider: ExchangeRateProvider(client: .failing, request: .failing, decoder: .failing, state: state),
+      currenciesProvider: CurrenciesProvider(state: state, storage: .failing, resource: config)
+    )
+  }
+  #endif
 }
 
-extension EnvironmentValues {
-  var injected: AppEnvironment {
-    get { self[AppEnvironment.self] }
-    set { self[AppEnvironment.self] = newValue }
-  }
-}
-
-extension View {
-  func injected(_ injected: AppEnvironment) -> some View {
-    environment(\.injected, injected)
-  }
-}
+// Singleton!!! Well, it does not have to be such bad. :)
+// https://www.pointfree.co/blog/posts/21-how-to-control-the-world
+var Env = AppEnvironment.release

@@ -10,20 +10,17 @@ import SwiftUI
 struct MainView: View {
   
   @Environment(\.scenePhase) private var scenePhase
-  @ObservedObject private(set) var viewModel: ViewModel
-  @ObservedObject var state: AppState // SwiftUI hack for refreshing view
+  @ObservedObject var state = Env.state // make it observable so as SwiftUI view can do diffing
   @State private var showingSelection = false
   @State private var showingAlert: Bool = false
   @State private var alertTitle: String = ""
   @State private var alertMessage: String = ""
+  @State private var currenciesProvider = Env.currenciesProvider
   
   var myCurrencies: [Currency] {
-    viewModel.env.state.allCurrencies.filter {
-      $0.isSelected
-    }.sorted {
-      $0.code == viewModel.env.state.base &&
-      $1.code != viewModel.env.state.base
-    }
+    state.allCurrencies
+      .filter { $0.isSelected }
+      .sorted { $0.code == state.base && $1.code != state.base }
   }
   
   var body: some View {
@@ -32,15 +29,17 @@ struct MainView: View {
         List {
           ForEach(myCurrencies) { currency in
             MainViewRow(
-              env: viewModel.env,
-              currency: binding(for: currency),
-              rate: (viewModel.env.state.base ?? "").isEmpty ? Double.zero : viewModel.env.state.exchangeRates.rates[currency.code] ?? Double.zero)
+              currency: currency,
+              rate: (state.base ?? "").isEmpty
+                ? Double.zero
+                : state.exchangeRates.rates[currency.code] ?? Double.zero
+            )
               .onTapGesture(perform: {
-                withAnimation(.linear) {
-                  viewModel.env.state.base = currency.code
-                }
+                withAnimation(.linear) { state.base = currency.code }
               })
-              .listRowBackground(viewModel.env.state.base == currency.code ? Color("accentBackground") : Color(UIColor.secondarySystemGroupedBackground))
+              .listRowBackground(state.base == currency.code
+                ? Color("accentBackground")
+                : Color(UIColor.secondarySystemGroupedBackground))
           }
         }
         .animation(.spring())
@@ -54,65 +53,48 @@ struct MainView: View {
             Image(systemName: "plus.circle")
               .font(.title)
           })
-        .alert(isPresented: $viewModel.env.state.hasError, content: {
+        .alert(isPresented: $state.hasError, content: {
           Alert(
             title: Text("ERROR"),
-            message: Text(viewModel.env.state.error?.localizedDescription ?? "Unknown error."),
+            message: Text(state.error?.localizedDescription ?? "Unknown error."),
             dismissButton: .default(Text("OK"))
           )
         })
         .fullScreenCover(isPresented: $showingSelection) {
           NavigationView {
-            SelectionView(viewModel: SelectionView.ViewModel(env: viewModel.env), showing: $showingSelection)
+            SelectionView(showing: $showingSelection)
           }
         }
         
+        // MARK: Empty view
         if (myCurrencies.isEmpty) {
           EmptyView()
         }
       }
     }
     .onAppear( perform: {
-      viewModel.env.model.currenciesProvider.load()
+      currenciesProvider.load()
     })
     .onChange(of: scenePhase, perform: { phase in
-      if phase == .inactive { viewModel.env.model.currenciesProvider.save() }
+      if phase == .inactive { currenciesProvider.save() }
     })
   }
-  
-  private func binding(for currency: Currency) -> Binding<Currency> {
-    guard let idx = viewModel.env.state.allCurrencies.firstIndex(of: currency) else {
-      fatalError()
-    }
-    return $viewModel.env.state.allCurrencies[idx]
-  }
 }
-/*
+
 struct MainView_Previews: PreviewProvider {
-  static var state = AppState()
   static var previews: some View {
-    MainView(viewModel.env.state: state, exchangeProvider: ExchangeRateProvider(), saveAction: {})
+    MainView()
       .onAppear {
-        state.load()
-        state.allCurrencies = state.allCurrencies.map {
+        Env.currenciesProvider.load()
+        Env.state.allCurrencies = Env.state.allCurrencies.map {
           var currency = $0
           if $0.code == "EUR" || $0.code == "USD" || $0.code == "CZK" {
             currency.isSelected = true
           }
           return currency
         }
-        state.base = "EUR"
+        Env.state.base = "EUR"
       }
   }
 }
-*/
 
-extension MainView {
-  class ViewModel: ObservableObject {
-    var env: AppEnvironment
-    
-    init(env: AppEnvironment) {
-      self.env = env
-    }
-  }
-}

@@ -9,14 +9,12 @@ import SwiftUI
 
 struct MainViewRow: View {
   
-  var env: AppEnvironment
-  @Binding var currency: Currency
+  var currency: Currency
   var rate: Double
   
   var body: some View {
     HStack(alignment: .center) {
       FlagView(
-        flagImageProvider: env.model.flagImageProvider,
         code: currency.code
       )
         .frame(width: 48, height: 32)
@@ -40,14 +38,14 @@ struct MainViewRow: View {
     }
   }
 }
-/*
+
 struct MainViewRow_Previews: PreviewProvider {
   static let czk = Currency(name: "Czech Republic Koruna", code: "CZK", symbol: "Kč")
-    static var previews: some View {
-      MainViewRow(currency: .constant(czk), rate: Double(1.0))
-    }
+  static var previews: some View {
+    MainViewRow(currency: czk, rate: Double(1.0))
+  }
 }
-*/
+
 extension Double {
   var currencyFormat: String {
     guard !self.isZero else { return "--" }
