@@ -11,15 +11,14 @@ import Combine
 class AppState: ObservableObject {
   @Published var allCurrencies = [Currency]() {
     willSet {
-      let filtered = newValue.filter{ $0.isSelected }
-      if filtered.isEmpty || !filtered.contains(where: { $0.code == base }) {
+      if newValue.filter({ $0.isSelected }).contains(where: { $0.code == base }) == false {
         base = ""
       }
     }
   }
   @Published var base: String? // contains code of currency selected as a base
   @Published var hasError = false
-  @Published var exchangeRates = CurrencyExchange(base: "", rates: [:])
+  @Published var exchangeRates = ExchangeRates(base: "", rates: [:])
   var error: Error? {
     willSet {
       hasError = newValue != nil

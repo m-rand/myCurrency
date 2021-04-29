@@ -18,9 +18,11 @@ struct MainView: View {
   @State private var currenciesProvider = Env.currenciesProvider
   
   var myCurrencies: [Currency] {
-    state.allCurrencies
-      .filter { $0.isSelected }
-      .sorted { $0.code == state.base && $1.code != state.base }
+    state.allCurrencies.filter { $0.isSelected }
+    
+    /// Currently not used, but in case of "base" code always first in list, this is the best solution:
+    ///state.allCurrencies.filter { state.base == $0.code } +
+    ///state.allCurrencies.filter { $0.isSelected && $0.code != state.base }
   }
   
   var body: some View {

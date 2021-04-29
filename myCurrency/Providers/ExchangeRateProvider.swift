@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+
 final class ExchangeRateProvider {
   
   private var client: APIClient
@@ -41,7 +42,7 @@ extension ExchangeRateProvider {
     let request = request.buildRequest(code, others)
     client.execute(request)
       .print()
-      .decode(type: CurrencyExchange.self, decoder: self.decoder)
+      .decode(type: ExchangeRateList.self, decoder: self.decoder)
       .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { completion in
         switch completion {
@@ -51,8 +52,9 @@ extension ExchangeRateProvider {
           print("received error: ", error)
           self.state.error = error
         }
-      }, receiveValue: {
-        self.state.exchangeRates = $0
+      }, receiveValue: { list in
+        self.state.exchangeRates.base = list.base
+        self.state.exchangeRates.rates = list.rates.keys.reduce(into: [:]) { dict, elem in dict[elem] = list.rates[elem]}
       })
       .store(in: &self.cancellables)
   }

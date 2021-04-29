@@ -8,9 +8,19 @@
 import Foundation
 import Combine
 
+struct ExchangeRateList: Decodable {
+  var base: String
+  var rates: [String : Double]
+  
+  enum CodingKeys: String, CodingKey {
+    case base = "base_code"
+    case rates = "conversion_rates"
+  }
+}
+
 struct ExchangeRateDecoder: TopLevelDecoder {
   typealias Input = Data
-  typealias T = CurrencyExchange
+  typealias T = ExchangeRateList
   
   var decoder: (_ type: T.Type, _ from: Data) throws -> T
   
