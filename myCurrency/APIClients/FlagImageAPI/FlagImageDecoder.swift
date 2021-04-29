@@ -22,14 +22,14 @@ struct FlagImageDecoder: TopLevelDecoder {
 
 extension FlagImageDecoder {
   
-  // MARK: release implementation
+  // MARK: - release implementation
   public static let release = Self(
     decoder: { type, from in
       return from // Return data just as it is.
     }
   )
   
-  // MARK: failing
+  // MARK: - failing
   #if DEBUG
   public static let failing = Self(
     decoder: { type, from in

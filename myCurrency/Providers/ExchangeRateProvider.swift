@@ -7,9 +7,9 @@
 
 import Foundation
 import Combine
-import SwiftUI
 
-class ExchangeRateProvider {
+final class ExchangeRateProvider {
+  
   private var client: APIClient
   private var request: ExchangeRateRequestProviding
   private var decoder: ExchangeRateDecoder
@@ -36,8 +36,7 @@ class ExchangeRateProvider {
   }
 }
 
-extension ExchangeRateProvider {
-  
+extension ExchangeRateProvider {  
   func fetchExchangeCurrency(for code: String, others: [String]) {
     let request = request.buildRequest(code, others)
     client.execute(request)

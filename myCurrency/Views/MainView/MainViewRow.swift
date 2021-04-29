@@ -33,8 +33,11 @@ struct MainViewRow: View {
       }
       .padding(.leading)
       Spacer()
-      Text(rate.currencyFormat)
-        .font(.system(.headline, design: .monospaced))
+      HStack(spacing: 5) {
+        Text(currency.symbol)
+        Text(rate.currencyFormat)
+          .font(.system(.headline, design: .monospaced))
+      }
     }
   }
 }

@@ -8,8 +8,7 @@
 import Foundation
 import Combine
 
-
-class FlagImageProvider {
+final class FlagImageProvider {
    
   private var cache: FlagImageCache
   private var client: APIClient

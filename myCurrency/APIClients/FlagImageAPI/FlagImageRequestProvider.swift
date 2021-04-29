@@ -14,7 +14,7 @@ struct FlagImageRequestProviding {
 
 extension FlagImageRequestProviding {
   
-  // MARK: release implementation
+  // MARK: - release implementation
   public static var release = Self(
     buildRequest: { code in
       let urlString = "https://raw.githubusercontent.com/transferwise/currency-flags/master/src/flags/"
@@ -23,7 +23,7 @@ extension FlagImageRequestProviding {
     }
   )
   
-  // MARK: failing
+  // MARK: - failing
   #if DEBUG
   public static let failing = Self(
     buildRequest: { code in

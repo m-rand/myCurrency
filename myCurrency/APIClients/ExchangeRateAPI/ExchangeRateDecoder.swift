@@ -21,14 +21,14 @@ struct ExchangeRateDecoder: TopLevelDecoder {
 
 extension ExchangeRateDecoder {
   
-  // MARK: release implementation
+  // MARK: - release implementation
   public static let release = Self(
     decoder: { type, from in
       return try JSONDecoder().decode(type, from: from)
     }
   )
   
-  // MARK: failing
+  // MARK: - failing
   #if DEBUG
   public static let failing = Self(
     decoder: { type, from in

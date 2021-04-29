@@ -14,7 +14,7 @@ struct ExchangeRateRequestProviding {
 
 extension ExchangeRateRequestProviding {
   
-  // MARK: release implementation
+  // MARK: - release implementation
   public static var release = Self(
     buildRequest: { base, others in
       let apiKey: String = "db249d6a9b81d3cdd9620df7"
@@ -25,7 +25,7 @@ extension ExchangeRateRequestProviding {
     }
   )
   
-  // MARK: failing
+  // MARK: - failing
   #if DEBUG
   public static let failing = Self(
     buildRequest: { base, others in

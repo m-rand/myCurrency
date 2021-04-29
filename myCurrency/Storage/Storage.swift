@@ -32,7 +32,7 @@ struct AsyncStorageProviding {
   }
 }
 
-// MARK: release implementation
+// MARK: - release implementation
 extension AsyncStorageProviding {
 
   private static let fileName = "myCurrencies"
@@ -87,10 +87,10 @@ extension AsyncStorageProviding {
   )
 }
 
-// MARK: simulate failure & success behavior
 #if DEBUG
 extension AsyncStorageProviding {
   
+  // MARK: - failing
   enum TestFailureError: Error {
     case testFailure
   }
@@ -106,6 +106,7 @@ extension AsyncStorageProviding {
     }
   )
   
+  // MARK: - success
   public static let success = Self(
     load: { Future { promise in
       promise(.success(

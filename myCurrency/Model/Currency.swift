@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Currency: Identifiable, Codable, Equatable {
+struct Currency: Identifiable, Equatable {
 
   let id = UUID()
   var name: String
@@ -16,10 +16,6 @@ struct Currency: Identifiable, Codable, Equatable {
   var symbol: String
   var value: Double = Double.zero
   var isSelected: Bool = false
-  
-  enum CodingKeys: String, CodingKey {
-    case code, name, symbol
-  }
 
 }
 
