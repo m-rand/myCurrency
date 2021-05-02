@@ -8,6 +8,21 @@
 import Foundation
 import Combine
 
+
+struct Currency: Identifiable, Equatable {
+  let id = UUID()
+  var name: String
+  var code: String
+  var symbol: String
+  var value: Double = Double.zero
+  var isSelected: Bool = false
+}
+
+struct ExchangeRates {
+  var base: String
+  var rates: [String : Double]
+}
+
 class AppState: ObservableObject {
   @Published var allCurrencies = [Currency]() {
     willSet {

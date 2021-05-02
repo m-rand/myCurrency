@@ -13,14 +13,14 @@ final class ExchangeRateProvider {
   
   private let client: APIClient
   private let request: ExchangeRateRequestProviding
-  private let decoder: ExchangeRateDecoder
+  private let decoder: DecoderProviding<ExchangeRateList>
   private var state: AppState
   private var cancellables = Set<AnyCancellable>()
   
   init(
     client: APIClient,
     request: ExchangeRateRequestProviding,
-    decoder: ExchangeRateDecoder,
+    decoder: DecoderProviding<ExchangeRateList>,
     state: AppState
   ) {
     self.client = client

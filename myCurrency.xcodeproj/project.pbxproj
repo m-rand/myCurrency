@@ -16,9 +16,7 @@
 		1C6050C62620D5DE0056C537 /* myCurrencyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050C52620D5DE0056C537 /* myCurrencyApp.swift */; };
 		1C6050CA2620D5E20056C537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C6050C92620D5E20056C537 /* Assets.xcassets */; };
 		1C6050CD2620D5E20056C537 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C6050CC2620D5E20056C537 /* Preview Assets.xcassets */; };
-		1C6050D72620D6730056C537 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050D62620D6730056C537 /* Currency.swift */; };
 		1C6050D92620D6E90056C537 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050D82620D6E90056C537 /* AppState.swift */; };
-		1C6050DC2620D7FA0056C537 /* ExchangeRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050DB2620D7FA0056C537 /* ExchangeRates.swift */; };
 		1C6050DE2620DE7C0056C537 /* ExchangeRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050DD2620DE7C0056C537 /* ExchangeRateProvider.swift */; };
 		1C6050E12620E3420056C537 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6050E02620E3420056C537 /* Client.swift */; };
 		1C6227142623672600995DEC /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6227132623672600995DEC /* SelectionView.swift */; };
@@ -48,9 +46,7 @@
 		1C6050C92620D5E20056C537 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C6050CC2620D5E20056C537 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1C6050CE2620D5E20056C537 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1C6050D62620D6730056C537 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		1C6050D82620D6E90056C537 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		1C6050DB2620D7FA0056C537 /* ExchangeRates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRates.swift; sourceTree = "<group>"; };
 		1C6050DD2620DE7C0056C537 /* ExchangeRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateProvider.swift; sourceTree = "<group>"; };
 		1C6050E02620E3420056C537 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		1C6227132623672600995DEC /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
@@ -121,7 +117,7 @@
 				1C6050DF2620E32B0056C537 /* APIClients */,
 				1C6050DA2620D7310056C537 /* Providers */,
 				1C6050D52620D6560056C537 /* Views */,
-				1C6050D42620D64E0056C537 /* Model */,
+				1C6050D42620D64E0056C537 /* State */,
 				1C6050C52620D5DE0056C537 /* myCurrencyApp.swift */,
 				1C0963E9262F6477004F9C93 /* AppEnvironment.swift */,
 				1C6050CE2620D5E20056C537 /* Info.plist */,
@@ -138,14 +134,12 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		1C6050D42620D64E0056C537 /* Model */ = {
+		1C6050D42620D64E0056C537 /* State */ = {
 			isa = PBXGroup;
 			children = (
-				1C6050D62620D6730056C537 /* Currency.swift */,
 				1C6050D82620D6E90056C537 /* AppState.swift */,
-				1C6050DB2620D7FA0056C537 /* ExchangeRates.swift */,
 			);
-			path = Model;
+			path = State;
 			sourceTree = "<group>";
 		};
 		1C6050D52620D6560056C537 /* Views */ = {
@@ -292,12 +286,10 @@
 				1C10B81D2630304F00DC249D /* CurrenciesProvider.swift in Sources */,
 				1C71BFF32639565A00A777BD /* FlagImageCache.swift in Sources */,
 				1C62271626236ADD00995DEC /* SearchBar.swift in Sources */,
-				1C6050D72620D6730056C537 /* Currency.swift in Sources */,
 				1C0963EA262F6477004F9C93 /* AppEnvironment.swift in Sources */,
 				1C7C0E4F262AD8CA0015E7F1 /* Storage.swift in Sources */,
 				1C5787FC262E2835003CC72A /* ExchangeRateRequestProvider.swift in Sources */,
 				1C6050E12620E3420056C537 /* Client.swift in Sources */,
-				1C6050DC2620D7FA0056C537 /* ExchangeRates.swift in Sources */,
 				1C4AD60B2629DF0E000F9ED4 /* EmptyView.swift in Sources */,
 				1C6050D92620D6E90056C537 /* AppState.swift in Sources */,
 				1CED95622638A68D0086A490 /* ExchangeRateDecoder.swift in Sources */,

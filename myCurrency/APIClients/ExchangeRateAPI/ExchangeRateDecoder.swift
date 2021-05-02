@@ -18,21 +18,10 @@ struct ExchangeRateList: Decodable {
   }
 }
 
-struct ExchangeRateDecoder: TopLevelDecoder {
-  typealias Input = Data
-  typealias T = ExchangeRateList
-  
-  let decoder: (_ type: T.Type, _ from: Data) throws -> T
-  
-  func decode<T>(_ type: T.Type, from: Data) throws -> T where T : Decodable {
-    return try decoder(type as! ExchangeRateDecoder.T.Type, from) as! T
-  }
-}
-
-extension ExchangeRateDecoder {
+extension DecoderProviding where T == ExchangeRateList {
   
   // MARK: - release implementation
-  public static let release = Self(
+  static let release = Self(
     decoder: { type, from in
       return try JSONDecoder().decode(type, from: from)
     }
@@ -40,7 +29,7 @@ extension ExchangeRateDecoder {
   
   // MARK: - failing
   #if DEBUG
-  public static let failing = Self(
+  static let failing = Self(
     decoder: { type, from in
       throw DecoderError.invalidData
     }

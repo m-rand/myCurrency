@@ -6,24 +6,12 @@
 //
 
 import Foundation
-import Combine
 
 
-struct FlagImageDecoder: TopLevelDecoder {
-  typealias Input = Data
-  typealias T = Data
-  
-  let decoder: (_ type: T.Type, _ from: Data) throws -> T
-  
-  func decode<T>(_ type: T.Type, from: Data) throws -> T where T : Decodable {
-    return try decoder(type as! FlagImageDecoder.T.Type, from) as! T
-  }
-}
-
-extension FlagImageDecoder {
+extension DecoderProviding where T == Data {
   
   // MARK: - release implementation
-  public static let release = Self(
+  static let release = Self(
     decoder: { type, from in
       return from // Return data just as it is.
     }
@@ -31,7 +19,7 @@ extension FlagImageDecoder {
   
   // MARK: - failing
   #if DEBUG
-  public static let failing = Self(
+  static let failing = Self(
     decoder: { type, from in
       throw DecoderError.invalidData
     }

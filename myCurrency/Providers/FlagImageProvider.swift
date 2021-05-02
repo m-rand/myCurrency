@@ -13,13 +13,13 @@ final class FlagImageProvider {
   private var cache: FlagImageCache
   private let client: APIClient
   private let request: FlagImageRequestProviding
-  private let decoder: FlagImageDecoder
+  private let decoder: DecoderProviding<Data>
   private var cancellables = Set<AnyCancellable>()
   
   init(
     client: APIClient,
     request: FlagImageRequestProviding,
-    decoder: FlagImageDecoder,
+    decoder: DecoderProviding<Data>,
     cache: FlagImageCache
   ) {
     self.client = client
