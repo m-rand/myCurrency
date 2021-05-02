@@ -21,16 +21,15 @@ enum ConfigError: Error {
 }
 
 struct ConfigProviding {
-  var load: (_ filename: String) throws -> [ConfigItem]
+  let load: (_ filename: String) throws -> [ConfigItem]
 }
 
 extension ConfigProviding {
   
   // MARK: - release
-  public static var release = Self(
+  public static let release = Self(
     load: { filename in
-      let data: Data
-      
+      let data: Data      
       do {
         guard let file = Bundle.main.url(forResource: filename, withExtension: nil) else {
           throw ConfigError.fileDoesNotExist

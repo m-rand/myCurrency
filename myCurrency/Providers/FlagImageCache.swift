@@ -8,8 +8,8 @@
 import Foundation
 
 struct FlagImageCache {
-  var get: (_ key: String) -> Data?
-  var set: (_ object: Data, _ key: String) -> Void
+  let get: (_ key: String) -> Data?
+  let set: (_ object: Data, _ key: String) -> Void
 }
 
 extension FlagImageCache {

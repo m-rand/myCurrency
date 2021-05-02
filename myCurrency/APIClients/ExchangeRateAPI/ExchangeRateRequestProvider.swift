@@ -9,13 +9,13 @@ import Foundation
 
 
 struct ExchangeRateRequestProviding {
-  var buildRequest: (_ base: String, _ others: [String]) -> URLRequest
+  let buildRequest: (_ base: String, _ others: [String]) -> URLRequest
 }
 
 extension ExchangeRateRequestProviding {
   
   // MARK: - release implementation
-  public static var release = Self(
+  public static let release = Self(
     buildRequest: { base, others in
       let apiKey: String = "db249d6a9b81d3cdd9620df7"
       let baseUrlString = "https://v6.exchangerate-api.com/v6/"

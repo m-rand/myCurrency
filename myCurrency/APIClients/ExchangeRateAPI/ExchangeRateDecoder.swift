@@ -22,7 +22,7 @@ struct ExchangeRateDecoder: TopLevelDecoder {
   typealias Input = Data
   typealias T = ExchangeRateList
   
-  var decoder: (_ type: T.Type, _ from: Data) throws -> T
+  let decoder: (_ type: T.Type, _ from: Data) throws -> T
   
   func decode<T>(_ type: T.Type, from: Data) throws -> T where T : Decodable {
     return try decoder(type as! ExchangeRateDecoder.T.Type, from) as! T

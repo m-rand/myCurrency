@@ -48,9 +48,9 @@ extension FlagView {
       isLoading = true
       flagImageProvider.loadImage(for: code)
         .receive(on: DispatchQueue.main)
-        .sink(receiveValue: { item in
-          self.image = UIImage(data: item)
-          self.isLoading = false
+        .sink(receiveValue: { [weak self] item in
+          self?.image = UIImage(data: item)
+          self?.isLoading = false
         })
         .store(in: &cancellables)
     }

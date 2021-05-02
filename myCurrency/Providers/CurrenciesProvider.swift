@@ -9,10 +9,11 @@ import Foundation
 import Combine
 
 final class CurrenciesProvider {
+  
   private var state: AppState
-  private var storage: AsyncStorageProviding
-  private var config: ConfigProviding
-  var cancellables = Set<AnyCancellable>()
+  private let storage: AsyncStorageProviding
+  private let config: ConfigProviding
+  private var cancellables = Set<AnyCancellable>()
   
   init(
     state: AppState,
@@ -44,15 +45,15 @@ extension CurrenciesProvider {
       storage.load()
         .print()
         .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { completion in
+        .sink(receiveCompletion: { [weak self] completion in
           switch completion {
           case .failure(let error):
-            self.state.error = error
+            self?.state.error = error
           case .finished: ()
           }
-        }, receiveValue: { item in
-          self.update(with: item.currencies)
-          self.state.base = item.base
+        }, receiveValue: { [weak self] item in
+          self?.update(with: item.currencies)
+          self?.state.base = item.base
         })
         .store(in: &cancellables)
     } catch {
@@ -70,10 +71,10 @@ extension CurrenciesProvider {
     storage.save(list)
       .print()
       .receive(on: DispatchQueue.main)
-      .sink(receiveCompletion: { completion in
+      .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure(let error):
-          self.state.error = error
+          self?.state.error = error
         case .finished: ()
         }
       }, receiveValue: { _ in })

@@ -16,13 +16,13 @@ struct CurrencyStorageItem : Codable {
   let code: String
 }
 struct CurrencyStorageList : Codable {
-  var base: String?
-  var currencies: [CurrencyStorageItem]
+  let base: String?
+  let currencies: [CurrencyStorageItem]
 }
 
 struct AsyncStorageProviding {
-  var load: () -> Future<CurrencyStorageList, Error>
-  var save: (_ value: CurrencyStorageList) -> Future<Void, Error>
+  let load: () -> Future<CurrencyStorageList, Error>
+  let save: (_ value: CurrencyStorageList) -> Future<Void, Error>
   init(
     load: @escaping () -> Future<CurrencyStorageList, Error>,
     save: @escaping (_ value: CurrencyStorageList) -> Future<Void, Error>
@@ -52,7 +52,7 @@ extension AsyncStorageProviding {
   public static let release = Self(
     load: {
       Future { promise in
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
           let path = try! Self.fileURL().path
           if !FileManager.default.fileExists(atPath: path) {
             let item = CurrencyStorageList(base: nil, currencies: [])

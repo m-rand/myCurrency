@@ -14,10 +14,8 @@ enum ServerError: Error {
 }
 
 struct APIClient {
-  var execute: (_ request: URLRequest) -> AnyPublisher<Data, Error>
-  init(
-    execute: @escaping (_ request: URLRequest) -> AnyPublisher<Data, Error>
-  ) {
+  let execute: (_ request: URLRequest) -> AnyPublisher<Data, Error>
+  init(execute: @escaping (_ request: URLRequest) -> AnyPublisher<Data, Error>) {
     self.execute = execute
   }
 }

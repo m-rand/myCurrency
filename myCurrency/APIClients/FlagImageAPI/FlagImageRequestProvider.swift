@@ -9,13 +9,13 @@ import Foundation
 
 
 struct FlagImageRequestProviding {
-  var buildRequest: (_ code: String) -> URLRequest
+  let buildRequest: (_ code: String) -> URLRequest
 }
 
 extension FlagImageRequestProviding {
   
   // MARK: - release implementation
-  public static var release = Self(
+  public static let release = Self(
     buildRequest: { code in
       let urlString = "https://raw.githubusercontent.com/transferwise/currency-flags/master/src/flags/"
       let url = URL(string: urlString + code.lowercased() + ".png")!

@@ -11,9 +11,9 @@ import Combine
 final class FlagImageProvider {
    
   private var cache: FlagImageCache
-  private var client: APIClient
-  private var request: FlagImageRequestProviding
-  private var decoder: FlagImageDecoder
+  private let client: APIClient
+  private let request: FlagImageRequestProviding
+  private let decoder: FlagImageDecoder
   private var cancellables = Set<AnyCancellable>()
   
   init(
@@ -37,9 +37,9 @@ final class FlagImageProvider {
         self.client.execute(request)
           .decode(type: Data.self, decoder: self.decoder)
           .catch { err in Just(Data()) }
-          .sink {
-            self.cache.set($0, code)
-            promise(.success($0))
+          .sink { [weak self] img in
+            self?.cache.set(img, code)
+            promise(.success(img))
           }
           .store(in: &self.cancellables)
       }

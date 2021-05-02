@@ -11,9 +11,9 @@ import Combine
 
 final class ExchangeRateProvider {
   
-  private var client: APIClient
-  private var request: ExchangeRateRequestProviding
-  private var decoder: ExchangeRateDecoder
+  private let client: APIClient
+  private let request: ExchangeRateRequestProviding
+  private let decoder: ExchangeRateDecoder
   private var state: AppState
   private var cancellables = Set<AnyCancellable>()
   
@@ -29,7 +29,7 @@ final class ExchangeRateProvider {
     self.state = state
     state.$base // Subscribe to all changes to state.base
       .removeDuplicates()
-      .filter{ $0 != nil && !$0!.isEmpty } // Filter out empty base codes
+      .filter { $0 != nil && !$0!.isEmpty } // Filter out empty base codes
       .sink { base in
         self.fetchExchangeCurrency(for: base!, others: [])
       }
@@ -52,9 +52,12 @@ extension ExchangeRateProvider {
           print("received error: ", error)
           self.state.error = error
         }
-      }, receiveValue: { list in
-        self.state.exchangeRates.base = list.base
-        self.state.exchangeRates.rates = list.rates.keys.reduce(into: [:]) { dict, elem in dict[elem] = list.rates[elem]}
+      }, receiveValue: { [weak self] list in
+        self?.state.exchangeRates.base = list.base
+        self?.state.exchangeRates.rates =
+          list.rates.keys.reduce(into: [:]) { dict, elem in
+            dict[elem] = list.rates[elem]
+          }
       })
       .store(in: &self.cancellables)
   }
