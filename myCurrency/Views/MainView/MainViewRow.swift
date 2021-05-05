@@ -48,16 +48,3 @@ struct MainViewRow_Previews: PreviewProvider {
     MainViewRow(currency: czk, rate: Double(1.0))
   }
 }
-
-extension Double {
-  var currencyFormat: String {
-    guard !self.isZero else { return "--" }
-    let formatter = NumberFormatter()
-    formatter.numberStyle = NumberFormatter.Style.decimal
-    formatter.minimumIntegerDigits = 2
-    formatter.minimumFractionDigits = 2
-    formatter.maximumFractionDigits = 2
-    formatter.roundingMode = .halfUp
-    return formatter.string(for: self)!
-  }
-}

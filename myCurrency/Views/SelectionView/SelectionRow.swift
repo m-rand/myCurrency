@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SelectionRow: View {
   
-  //var env: AppEnvironment
   @Binding var currency: Currency
   
   var body: some View {

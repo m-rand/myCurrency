@@ -27,6 +27,9 @@
 		1C93AF0726247E1000751B9A /* SelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93AF0626247E1000751B9A /* SelectionRow.swift */; };
 		1C93AF092624874A00751B9A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93AF082624874A00751B9A /* MainView.swift */; };
 		1C93AF0D2624A70C00751B9A /* MainViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C93AF0C2624A70C00751B9A /* MainViewRow.swift */; };
+		1C9F9CC726418C420092BB62 /* NumberFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9F9CC626418C420092BB62 /* NumberFormatter+Extensions.swift */; };
+		1C9F9CC926418C6D0092BB62 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9F9CC826418C6D0092BB62 /* Double+Extensions.swift */; };
+		1C9F9CCB26418C9F0092BB62 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9F9CCA26418C9F0092BB62 /* Array+Extensions.swift */; };
 		1CB83F0826219F4800E8231A /* FlagImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB83F0726219F4800E8231A /* FlagImageProvider.swift */; };
 		1CB83F0A2621A02C00E8231A /* FlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB83F092621A02C00E8231A /* FlagView.swift */; };
 		1CCE38832639444E00843BF7 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE38822639444E00843BF7 /* Decoder.swift */; };
@@ -57,6 +60,9 @@
 		1C93AF0626247E1000751B9A /* SelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionRow.swift; sourceTree = "<group>"; };
 		1C93AF082624874A00751B9A /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		1C93AF0C2624A70C00751B9A /* MainViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewRow.swift; sourceTree = "<group>"; };
+		1C9F9CC626418C420092BB62 /* NumberFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NumberFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		1C9F9CC826418C6D0092BB62 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
+		1C9F9CCA26418C9F0092BB62 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		1CB83F0726219F4800E8231A /* FlagImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagImageProvider.swift; sourceTree = "<group>"; };
 		1CB83F092621A02C00E8231A /* FlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagView.swift; sourceTree = "<group>"; };
 		1CCE38822639444E00843BF7 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
@@ -112,15 +118,16 @@
 		1C6050C42620D5DE0056C537 /* myCurrency */ = {
 			isa = PBXGroup;
 			children = (
+				1C6050C52620D5DE0056C537 /* myCurrencyApp.swift */,
+				1C0963E9262F6477004F9C93 /* AppEnvironment.swift */,
+				1C6050CE2620D5E20056C537 /* Info.plist */,
+				1C6050D42620D64E0056C537 /* State */,
 				1C622710262363D000995DEC /* Resources */,
 				1CB19AEF2626206C00139A1B /* Storage */,
 				1C6050DF2620E32B0056C537 /* APIClients */,
 				1C6050DA2620D7310056C537 /* Providers */,
 				1C6050D52620D6560056C537 /* Views */,
-				1C6050D42620D64E0056C537 /* State */,
-				1C6050C52620D5DE0056C537 /* myCurrencyApp.swift */,
-				1C0963E9262F6477004F9C93 /* AppEnvironment.swift */,
-				1C6050CE2620D5E20056C537 /* Info.plist */,
+				1C9F9CC526418C040092BB62 /* Extensions */,
 				1C6050CB2620D5E20056C537 /* Preview Content */,
 			);
 			path = myCurrency;
@@ -203,6 +210,16 @@
 			path = MainView;
 			sourceTree = "<group>";
 		};
+		1C9F9CC526418C040092BB62 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1C9F9CC626418C420092BB62 /* NumberFormatter+Extensions.swift */,
+				1C9F9CC826418C6D0092BB62 /* Double+Extensions.swift */,
+				1C9F9CCA26418C9F0092BB62 /* Array+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		1CB19AEF2626206C00139A1B /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,11 +299,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C9F9CC926418C6D0092BB62 /* Double+Extensions.swift in Sources */,
 				1C10B81B26302F9B00DC249D /* Config.swift in Sources */,
 				1C10B81D2630304F00DC249D /* CurrenciesProvider.swift in Sources */,
 				1C71BFF32639565A00A777BD /* FlagImageCache.swift in Sources */,
 				1C62271626236ADD00995DEC /* SearchBar.swift in Sources */,
 				1C0963EA262F6477004F9C93 /* AppEnvironment.swift in Sources */,
+				1C9F9CCB26418C9F0092BB62 /* Array+Extensions.swift in Sources */,
 				1C7C0E4F262AD8CA0015E7F1 /* Storage.swift in Sources */,
 				1C5787FC262E2835003CC72A /* ExchangeRateRequestProvider.swift in Sources */,
 				1C6050E12620E3420056C537 /* Client.swift in Sources */,
@@ -294,6 +313,7 @@
 				1C6050D92620D6E90056C537 /* AppState.swift in Sources */,
 				1CED95622638A68D0086A490 /* ExchangeRateDecoder.swift in Sources */,
 				1CB83F0826219F4800E8231A /* FlagImageProvider.swift in Sources */,
+				1C9F9CC726418C420092BB62 /* NumberFormatter+Extensions.swift in Sources */,
 				1CB83F0A2621A02C00E8231A /* FlagView.swift in Sources */,
 				1C93AF092624874A00751B9A /* MainView.swift in Sources */,
 				1C93AF0726247E1000751B9A /* SelectionRow.swift in Sources */,
@@ -436,7 +456,7 @@
 				DEVELOPMENT_TEAM = GX5W4FWX46;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = myCurrency/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -459,7 +479,7 @@
 				DEVELOPMENT_TEAM = GX5W4FWX46;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = myCurrency/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

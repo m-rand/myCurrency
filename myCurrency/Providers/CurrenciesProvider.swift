@@ -81,11 +81,3 @@ extension CurrenciesProvider {
       .store(in: &cancellables)
   }
 }
-
-extension Array {
-  mutating func mapInPlace(_ transform: (inout Element) -> ()) {
-    for i in indices {
-      transform(&self[i])
-    }
-  }
-}
